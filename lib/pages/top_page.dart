@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_assignment_2/model/memo.dart';
 import 'package:firebase_assignment_2/pages/add_page.dart';
+
 import 'package:flutter/material.dart';
 
 class topPage extends StatefulWidget {
@@ -13,10 +14,16 @@ class topPage extends StatefulWidget {
 
 class _topPageState extends State<topPage> {
   //追加したメモをリアルタイムで取得
-  final memoCollection = FirebaseFirestore.instance.collection('memo');
+  //取得した値の並べ替えorderBy('createdDate', descending: true)
+  //descending: trueで新しい順
+  //where('title', isEqualTo: 'test5')にすると、test5と一致するtitleだけが取得
+  var memoCollection =
+  FirebaseFirestore.instance.collection('memo').orderBy('name').snapshots();
 
   var _selectedValue = '"犬のみ';
-  var _usStates = ["犬のみ", "猫のみ", "年齢:昇順","年齢:降順"];
+  var _popMenu = ["犬のみ", "猫のみ", "年齢:昇順","年齢:降順"];
+
+
 
 
   @override
@@ -28,12 +35,30 @@ class _topPageState extends State<topPage> {
           PopupMenuButton<String>(
             initialValue: _selectedValue,
             onSelected: (String s) {
-              setState(() {
-                _selectedValue = s;
-              });
+              if(s == _popMenu[0]){
+                setState(() {
+                  memoCollection =
+                      FirebaseFirestore.instance.collection('memo').where('dogCat', isEqualTo: '犬').snapshots();
+                });
+              }else if(s == _popMenu[1]) {
+                setState(() {
+                  memoCollection =
+                      FirebaseFirestore.instance.collection('memo').where('dogCat', isEqualTo: '猫').snapshots();
+                });
+              }else if(s == _popMenu[2]) {
+                setState(() {
+                  memoCollection =
+                      FirebaseFirestore.instance.collection('memo').orderBy('age', descending: false).snapshots();
+                });
+              }else if(s == _popMenu[3]) {
+                setState(() {
+                  memoCollection =
+                      FirebaseFirestore.instance.collection('memo').orderBy('age', descending: true).snapshots();
+                });
+              }
             },
             itemBuilder: (BuildContext context) {
-              return _usStates.map((String s) {
+              return _popMenu.map((String s) {
                 return PopupMenuItem(
                   child: Text(s),
                   value: s,
@@ -45,10 +70,7 @@ class _topPageState extends State<topPage> {
       ),
       //StreamBuilder追加したメモをリアルタイムで取得
       body: StreamBuilder<QuerySnapshot>(
-        //取得した値の並べ替えorderBy('createdDate', descending: true)
-        //descending: trueで新しい順
-        //where('title', isEqualTo: 'test5')にすると、test5と一致するtitleだけが取得
-          stream: memoCollection.orderBy('name', descending: true).snapshots(),
+          stream: memoCollection,
           builder: (context, snapshot) {
             if(snapshot.connectionState == ConnectionState.waiting) {
               //グルグルマークで待つ
@@ -74,17 +96,18 @@ class _topPageState extends State<topPage> {
                     name: data['name'],
                     breed: data['breed'],
                     age: data['age'],
+                    sex: data['sex'],
                   );
                   return Card(
                     child: Expanded(
-                          child: ListTile(
-                            //itemBuilder: (context, index)のindexをmemoList[index].titleに入れることで
-                            //memoListの値を順番に取得する指示を出せる
-                            title: Text(
-                                '名前:' + fetchMemo.name + '    '+'''品種:''' + fetchMemo.breed + ''''    ''' + '''年齢:''' + fetchMemo.age
-                            )
-                          ),
-                        ),
+                      child: ListTile(
+                        //itemBuilder: (context, index)のindexをmemoList[index].titleに入れることで
+                        //memoListの値を順番に取得する指示を出せる
+                          title: Text(
+                              '名前:' + fetchMemo.name + '    '+'''品種:''' + fetchMemo.breed + '''    ''' + '    '+'''性別:'''+ fetchMemo.sex + '    '+ '''年齢:''' + fetchMemo.age
+                          )
+                      ),
+                    ),
                   );
                 }
             );

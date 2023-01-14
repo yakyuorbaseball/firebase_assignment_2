@@ -3,6 +3,8 @@ class Memo{
   String name;
   String breed;
   String age;
+  String sex;
+  String? dogCat;
 
   //コンストラクタ→クラスのインスタンスを生成する際に呼び出されるメソッド　クラス名(this.要素の変数名);
   //設計図から実在するものを生成するときに動いてくれるメソッドのこと
@@ -11,7 +13,8 @@ class Memo{
     required this.id,
     required this.name,
     required this.breed,
-    required this.age
-
+    required this.age,
+    required this.sex,
+    this.dogCat,
   });
 }
