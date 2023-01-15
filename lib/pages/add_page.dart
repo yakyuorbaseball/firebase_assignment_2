@@ -29,23 +29,9 @@ class _AddMemoPageState extends State<AddMemoPage> {
       'name': nameEditingController.text,
       'breed': breedEditingController.text,
       'age': ageEditingController.text,
-      'dogCat':_dogCat,
+      'dogCat': _dogCat,
+      'sex': _character1,
     });
-  }
-
-  //タイトルと詳細に今のメモ状態が反映されるようにする
-  //initStateのタイミングで処理
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    //もしwidget.currentMemoがnullでない→更新の場合
-    if(widget.currentMemo != null) {
-      //widget.currentMemo != nullとしているのでcurrentMemo!でnullでないと宣言
-      nameEditingController.text =widget.currentMemo!.name;
-      breedEditingController.text=widget.currentMemo!.breed;
-      ageEditingController.text==widget.currentMemo!.breed;
-    }
   }
 
   //初期値の指定
@@ -98,6 +84,9 @@ class _AddMemoPageState extends State<AddMemoPage> {
                         onChanged: (DogCat? value) {
                           setState(() {
                             _dogCat = value;
+                            //FirebaseFirestore.instance.collection('memo').add({
+                              //'dogCat' : '犬'
+                            //});
                           });
                         },
                       ),
@@ -115,6 +104,9 @@ class _AddMemoPageState extends State<AddMemoPage> {
                         onChanged: (DogCat? value) {
                           setState(() {
                             _dogCat = value;
+                            //FirebaseFirestore.instance.collection('memo').add({
+                              //'dogCat' : '猫'
+                            //});
                           });
                         },
                       ),
@@ -154,6 +146,9 @@ class _AddMemoPageState extends State<AddMemoPage> {
                         onChanged: (Sex? value) {
                           setState(() {
                             _character1 = value;
+                            //FirebaseFirestore.instance.collection('memo').add({
+                              //'sex' : 'オス'
+                            //});
                           });
                         },
                       ),
@@ -168,6 +163,9 @@ class _AddMemoPageState extends State<AddMemoPage> {
                         onChanged: (Sex? value) {
                           setState(() {
                             _character1 = value;
+                            //FirebaseFirestore.instance.collection('memo').add({
+                              //'sex' : 'メス'
+                            //});
                           });
                         },
                       ),
