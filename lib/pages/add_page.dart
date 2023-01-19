@@ -2,9 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_assignment_2/model/memo.dart';
 import 'package:flutter/material.dart';
 
-enum DogCat { dog, cat }
-enum Sex { man, woman }
-
 class AddMemoPage extends StatefulWidget {
   final Memo? currentMemo;
   const AddMemoPage({Key? key,this.currentMemo}) : super(key: key);
@@ -19,7 +16,6 @@ class _AddMemoPageState extends State<AddMemoPage> {
   TextEditingController ageEditingController = TextEditingController();
 
 
-
   //メモを作成する処理をメソッドとして定義
   Future<void> createMemo() async{
     final memoCollection = FirebaseFirestore.instance.collection('memo');
@@ -29,14 +25,18 @@ class _AddMemoPageState extends State<AddMemoPage> {
       'name': nameEditingController.text,
       'breed': breedEditingController.text,
       'age': ageEditingController.text,
-      'dogCat': _dogCat,
-      'sex': _character1,
+      'dogCat': _type,
+      'sex': _type2,
     });
   }
 
-  //初期値の指定
-  DogCat? _dogCat = DogCat.dog;
-  Sex? _character1 = Sex.man;
+  String _type = '';
+
+  void _handleRadio(String? value) => setState(() {_type = value!;});
+
+  String _type2 = '';
+
+  void _handleRadio2(String? value) => setState(() {_type2 = value!;});
 
 
 
@@ -78,37 +78,25 @@ class _AddMemoPageState extends State<AddMemoPage> {
                   Expanded(
                     child: ListTile(
                       title: const Text('犬'),
-                      leading: Radio<DogCat>(
-                        value: DogCat.dog,
-                        groupValue: _dogCat,
-                        onChanged: (DogCat? value) {
-                          setState(() {
-                            _dogCat = value;
-                            //FirebaseFirestore.instance.collection('memo').add({
-                              //'dogCat' : '犬'
-                            //});
-                          });
-                        },
+                      leading: Radio(
+                        activeColor: Colors.blue,
+                        value: '犬',
+                        groupValue: _type,
+                        onChanged: _handleRadio,
                       ),
                     ),
                   ),
                   Expanded(
                     child: ListTile(
                       title: const Text('猫'),
-                      leading: Radio<DogCat>(
+                      leading: Radio(
+                        activeColor: Colors.blue,
                         //value：該当のラジオボタンの値。
-                        value: DogCat.cat,
+                        value: '猫',
                         //groupValue：グループ内のラジオボタンで現在選択されている値。
-                        groupValue: _dogCat,
+                        groupValue: _type,
                         //onChanged：選択変更時の処理。setState()により選択の変更をグループ内のラジオボタンに伝播させられる。
-                        onChanged: (DogCat? value) {
-                          setState(() {
-                            _dogCat = value;
-                            //FirebaseFirestore.instance.collection('memo').add({
-                              //'dogCat' : '猫'
-                            //});
-                          });
-                        },
+                        onChanged: _handleRadio,
                       ),
                     ),
                   ),
@@ -140,34 +128,22 @@ class _AddMemoPageState extends State<AddMemoPage> {
                   Expanded(
                     child: ListTile(
                       title: const Text('オス'),
-                      leading: Radio<Sex>(
-                        value: Sex.man,
-                        groupValue: _character1,
-                        onChanged: (Sex? value) {
-                          setState(() {
-                            _character1 = value;
-                            //FirebaseFirestore.instance.collection('memo').add({
-                              //'sex' : 'オス'
-                            //});
-                          });
-                        },
+                      leading: Radio(
+                        activeColor: Colors.blue,
+                        value: 'オス',
+                        groupValue: _type2,
+                        onChanged: _handleRadio2,
                       ),
                     ),
                   ),
                   Expanded(
                     child: ListTile(
                       title: const Text('メス'),
-                      leading: Radio<Sex>(
-                        value: Sex.woman,
-                        groupValue: _character1,
-                        onChanged: (Sex? value) {
-                          setState(() {
-                            _character1 = value;
-                            //FirebaseFirestore.instance.collection('memo').add({
-                              //'sex' : 'メス'
-                            //});
-                          });
-                        },
+                      leading: Radio(
+                        activeColor: Colors.blue,
+                        value: 'メス',
+                        groupValue: _type2,
+                        onChanged: _handleRadio2,
                       ),
                     ),
                   ),
